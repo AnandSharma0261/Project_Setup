@@ -1,0 +1,51 @@
+/* Landing Header Component Styles */
+.tvs-header {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  padding: 1rem;
+  color: white;
+}
+
+.tvs-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tvs-text {
+  font-size: 1.25rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+}
+
+.tvs-icon {
+  font-size: 1.25rem;
+}
+
+/* Responsive Design for Header */
+@media (max-width: 768px) {
+  .tvs-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .tvs-text {
+    font-size: 1.125rem;
+  }
+  
+  .tvs-icon {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tvs-header {
+    padding: 0.5rem 1rem;
+  }
+  
+  .tvs-text {
+    font-size: 1rem;
+  }
+  
+  .tvs-icon {
+    font-size: 1rem;
+  }
+}

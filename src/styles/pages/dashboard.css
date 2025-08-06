@@ -1,0 +1,495 @@
+/* Dashboard Page Styles */
+.dashboard-page {
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #F8FAFC;
+  min-height: 100vh;
+}
+
+/* Header Section */
+.dashboard-header-section {
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 3rem;
+}
+
+.dashboard-title {
+    margin: 0;
+    color: #464E5F;
+    font-family: Poppins;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 100%;
+}
+
+/* Filters Section */
+.dashboard-filters {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Content Section */
+.dashboard-content-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Main Content Grid */
+.main-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Section Cards */
+.section-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E2E8F0;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0 0 1.5rem 0;
+}
+
+/* Chart Section */
+.chart-section {
+  height: fit-content;
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Circular Chart */
+.circular-chart {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 2rem auto;
+}
+
+.chart-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
+}
+
+.chart-total-label {
+  font-size: 1rem;
+  color: #6B7280;
+  margin-bottom: 0.25rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+}
+
+.chart-total-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #007BFF;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Concentric Rings Chart */
+.concentric-rings-chart {
+  transform: rotate(-90deg);
+}
+
+.ring-background {
+  opacity: 1;
+}
+
+.ring-background-full {
+  opacity: 0.3;
+}
+
+.ring-progress {
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.ring-progress:hover {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  stroke-width: 14;
+}
+
+.ring-reviewed {
+  stroke: #28A745;
+}
+
+.ring-completed {
+  stroke: #FFC107;
+}
+
+.ring-pending {
+  stroke: #DC3545;
+}
+
+/* Chart Legend */
+.chart-legend {
+  width: 100%;
+}
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.legend-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 24px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+  font-family: 'Poppins', sans-serif;
+  flex-shrink: 0;
+}
+
+.reviewed-badge {
+  background: #28A745;
+}
+
+.completed-badge {
+  background: #FFC107;
+  color: #000;
+}
+
+.pending-badge {
+  background: #DC3545;
+}
+
+.allotted-badge {
+  background: #007BFF;
+}
+
+.legend-label {
+  font-size: 0.875rem;
+  color: #6B7280;
+  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Table Section */
+.table-section {
+  height: fit-content;
+}
+
+.table-subtitle {
+  font-size: 1rem;
+  color: #6B7280;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+}
+
+/* Audits Table */
+.audits-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.audits-table th {
+  background: #F8FAFC;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #E2E8F0;
+  white-space: nowrap;
+}
+
+.audits-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #F1F5F9;
+  color: #374151;
+}
+
+.audits-table tbody tr:hover {
+  background: #F8FAFC;
+}
+
+.audits-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.status-completed {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.status-in-progress {
+  background: #DBEAFE;
+  color: #1E40AF;
+}
+
+.status-yet-to-start {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.status-approval-pending {
+  background: #FED7AA;
+  color: #9A3412;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .main-content-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .chart-section {
+    order: 2;
+  }
+  
+  .table-section {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  
+  .dashboard-filters {
+    width: 100%;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .section-card {
+    padding: 1.5rem;
+  }
+  
+  .dashboard-title {
+    font-size: 1.75rem;
+  }
+  
+  .section-title {
+    font-size: 1.25rem;
+  }
+  
+  .circular-chart {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .chart-total-value {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-content-section {
+    gap: 1.5rem;
+  }
+  
+  .section-card {
+    padding: 1rem;
+  }
+  
+  .dashboard-title {
+    font-size: 1.5rem;
+  }
+  
+  .audits-table {
+    font-size: 0.8rem;
+  }
+  
+  .audits-table th,
+  .audits-table td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .status-badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+  }
+  
+  .circular-chart {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .chart-total-value {
+    font-size: 1.25rem;
+  }
+  
+  .legend-item {
+    gap: 0.5rem;
+  }
+  
+  .legend-label {
+    font-size: 0.8rem;
+  }
+}
+
+/* Loading States */
+.dashboard-page.loading {
+  position: relative;
+}
+
+.dashboard-page.loading::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(248, 250, 252, 0.8);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+}
+
+.dashboard-page.loading::after {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 3px solid #E2E8F0;
+  border-top: 3px solid #4A90E2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 10000;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Animation for stats cards */
+.stats-grid .stats-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.stats-grid .stats-card:nth-child(1) { animation-delay: 0.1s; }
+.stats-grid .stats-card:nth-child(2) { animation-delay: 0.2s; }
+.stats-grid .stats-card:nth-child(3) { animation-delay: 0.3s; }
+.stats-grid .stats-card:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section cards animation */
+.section-card {
+  animation: fadeIn 0.8s ease-out 0.5s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .dashboard-page {
+    background: white;
+  }
+  
+  .section-card {
+    box-shadow: none;
+    border: 1px solid #E2E8F0;
+    break-inside: avoid;
+  }
+  
+  .stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .main-content-grid {
+    display: block;
+  }
+  
+  .chart-section,
+  .table-section {
+    margin-bottom: 2rem;
+    break-inside: avoid;
+  }
+}

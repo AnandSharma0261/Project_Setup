@@ -1,0 +1,286 @@
+/* Stats Card Component Styles */
+.stats-card {
+  position: relative;
+  padding: 1.5rem;
+  border-radius: 16px;
+  color: white;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+}
+
+.stats-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Color Variants */
+.stats-card--teal {
+  background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+}
+
+.stats-card--purple {
+  background: linear-gradient(135deg, #A855F7 0%, #8B5CF6 100%);
+}
+
+.stats-card--orange {
+  background: linear-gradient(135deg, #FB923C 0%, #F97316 100%);
+}
+
+.stats-card--blue {
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+}
+
+/* Content Layout */
+.stats-card__content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  z-index: 2;
+  position: relative;
+}
+
+/* Icon Section */
+.stats-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  flex-shrink: 0;
+}
+
+.stats-card__icon svg {
+  width: 32px;
+  height: 32px;
+  stroke-width: 2;
+}
+
+/* Stats Section */
+.stats-card__stats {
+  flex: 1;
+}
+
+.stats-card__value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.stats-card__title {
+  font-size: 1rem;
+  font-weight: 500;
+  opacity: 0.9;
+  line-height: 1.2;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Trend Indicator */
+.stats-card__trend {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.stats-card__trend.positive {
+  color: rgba(34, 197, 94, 1);
+}
+
+.stats-card__trend.negative {
+  color: rgba(239, 68, 68, 1);
+}
+
+.trend-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.trend-value {
+  font-size: 0.875rem;
+}
+
+/* Background Decoration */
+.stats-card__decoration {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.decoration-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.decoration-circle--1 {
+  width: 120px;
+  height: 120px;
+  top: -40px;
+  right: -40px;
+}
+
+.decoration-circle--2 {
+  width: 80px;
+  height: 80px;
+  top: 20px;
+  right: -20px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.decoration-circle--3 {
+  width: 60px;
+  height: 60px;
+  bottom: -20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stats-card {
+    padding: 1.25rem;
+    min-height: 120px;
+  }
+  
+  .stats-card__content {
+    gap: 1rem;
+  }
+  
+  .stats-card__icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .stats-card__icon svg {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .stats-card__value {
+    font-size: 2rem;
+  }
+  
+  .stats-card__title {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-card {
+    padding: 1rem;
+    min-height: 100px;
+  }
+  
+  .stats-card__content {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  
+  .stats-card__icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .stats-card__icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .stats-card__value {
+    font-size: 1.75rem;
+  }
+  
+  .stats-card__title {
+    font-size: 0.8rem;
+  }
+  
+  .stats-card__trend {
+    justify-content: center;
+  }
+  
+  .decoration-circle--1 {
+    width: 80px;
+    height: 80px;
+    top: -20px;
+    right: -20px;
+  }
+  
+  .decoration-circle--2 {
+    width: 50px;
+    height: 50px;
+    top: 10px;
+    right: -10px;
+  }
+  
+  .decoration-circle--3 {
+    width: 40px;
+    height: 40px;
+    bottom: -10px;
+    right: 10px;
+  }
+}
+
+/* Animation for value changes */
+@keyframes valueChange {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.stats-card__value.updating {
+  animation: valueChange 0.3s ease-in-out;
+}
+
+/* Loading State */
+.stats-card.loading {
+  position: relative;
+}
+
+.stats-card.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 3;
+}
+
+.stats-card.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 4;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}

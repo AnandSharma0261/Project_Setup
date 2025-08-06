@@ -1,0 +1,10 @@
+/* Input Component Styles */
+.helper-text {
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-family: Poppins;
+  font-weight: 400;
+  margin-top: 0.25rem;
+}
+
+/* Additional input styles can be added here if needed */
