@@ -4,6 +4,22 @@
   font-family: 'Poppins', sans-serif;
   background: #F8FAFC;
   min-height: 100vh;
+  /* Fix for scroll distortion */
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Prevent layout shifts during scroll */
+.dashboard-page * {
+  box-sizing: border-box;
+}
+
+/* Smooth scrolling container */
+.dashboard-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  will-change: scroll-position;
 }
 
 /* Header Section */

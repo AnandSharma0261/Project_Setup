@@ -5,17 +5,14 @@ import { useAppSelector } from '../../hooks/redux';
 const ChecksheetStatus: React.FC = () => {
   const { checksheetStatus } = useAppSelector((state) => state.dashboard);
   
-  const LEGEND = [
-    { label: 'Reviewed', value: checksheetStatus.reviewed, color: 'bg-[#0BB783]', text: 'text-white' },
-    { label: 'Completed', value: checksheetStatus.completed, color: 'bg-[#FFC107]', text: 'text-[#495057]' },
-    { label: 'Pending', value: checksheetStatus.pending, color: 'bg-[#E1505F]', text: 'text-white' },
-    { label: 'Alloted', value: checksheetStatus.alloted, color: 'bg-[#3D8BFD]', text: 'text-white' },
-  ];
+  // We'll use these values directly in our updated UI
+  // For the image in your reference, we need 3 values: "Review Pending", "Review In Progress" and "Reviewed"
 
   const total = checksheetStatus.reviewed + checksheetStatus.completed + checksheetStatus.pending + checksheetStatus.alloted;
 
   return (
-    <div className="bg-white rounded-lg shadow-lg flex flex-col justify-between items-center p-3 sm:p-4 lg:p-5 w-full max-w-sm mx-auto" style={{ minHeight: '400px' }}>
+    <div className="bg-white rounded-lg shadow-lg flex flex-col justify-between items-center p-3 sm:p-4 lg:p-5 w-full max-w-lg mx-auto" style={{ minHeight: '440px' }}>
+      <h3 className="text-gray-800 font-medium text-lg self-start mb-4">Checksheet Status</h3>
       {/* Chart Rings - Responsive size */}
       <div className="relative flex-none mx-auto w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64">
         {/* Outer Ring (Green) */}
@@ -39,16 +36,37 @@ const ChecksheetStatus: React.FC = () => {
           <div className="text-blue-500 text-xl sm:text-2xl font-bold">{total}</div>
         </div>
       </div>
-      {/* Legend - Responsive layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 w-full mt-3 sm:mt-4">
-        {LEGEND.map((item, idx) => (
-          <div key={item.label} className="flex items-center gap-2">
-            <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded flex items-center justify-center ${item.color} text-xs sm:text-sm font-bold ${item.text}`}>
-              {item.value}
+      {/* Legend - Styled like ReviewerStatusCard */}
+      <div className="flex flex-col gap-3 items-center w-full mt-4">
+        {/* First row - Review Pending and Review in Progress */}
+        <div className="flex justify-center gap-6">
+          <div className="flex items-center gap-2">
+            <div 
+              className="px-3 h-6 rounded-full flex items-center justify-center text-white text-sm font-bold bg-red-500"
+            >
+              25
             </div>
-            <span className="text-xs sm:text-sm text-gray-600 leading-tight">{item.label}</span>
+            <span className="text-sm text-gray-600">Review Pending</span>
           </div>
-        ))}
+          <div className="flex items-center gap-2">
+            <div 
+              className="px-3 h-6 rounded-full flex items-center justify-center text-black text-sm font-bold bg-yellow-400"
+            >
+              75
+            </div>
+            <span className="text-sm text-gray-600">Review In Progress</span>
+          </div>
+        </div>
+        
+        {/* Second row - Reviewed (centered) */}
+        <div className="flex items-center justify-center gap-2">
+          <div 
+            className="px-3 h-6 rounded-full flex items-center justify-center text-white text-sm font-bold bg-green-500"
+          >
+            100
+          </div>
+          <span className="text-sm text-gray-600">Reviewed</span>
+        </div>
       </div>
     </div>
   );

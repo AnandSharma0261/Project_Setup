@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Eye, UserCheck, Building } from 'lucide-react';
+import { Users, Eye, UserCheck, Building, FileCheck } from 'lucide-react';
 import { setFilters } from '../store/slices/dashboardSlice';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import MetricCard from '../components/dashboard/MetricCard.tsx';
@@ -138,95 +138,107 @@ const Reports: React.FC = () => {
         <div className="flex flex-col lg:flex-row gap-6 mt-6">
           {/* Left side - Status sections */}
           <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Auditor Status - No header, 2x2 grid */}
-            <div className="bg-white rounded-lg shadow-sm border p-4 min-w-0">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">50</div>
-                  <span className="text-xs text-gray-600 truncate">Action Plan Pending</span>
-                </div>
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">20</div>
-                  <span className="text-xs text-gray-600 truncate">Audit in Progress</span>
-                </div>
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">30</div>
-                  <span className="text-xs text-gray-600 truncate">Completed</span>
-                </div>
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">20</div>
-                  <span className="text-xs text-gray-600 truncate">Not Started</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Reviewer Status - No header, 2x2 grid */}
-            <div className="bg-white rounded-lg shadow-sm border p-4 min-w-0">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">50</div>
-                  <span className="text-xs text-gray-600 truncate">Auto Submitted</span>
-                </div>
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">30</div>
-                  <span className="text-xs text-gray-600 truncate">Approval in Progress</span>
-                </div>
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">30</div>
-                  <span className="text-xs text-gray-600 truncate">Approved</span>
-                </div>
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">20</div>
-                  <span className="text-xs text-gray-600 truncate">Approval Pending</span>
+            {/* Auditor Status */}
+            <div>
+              <h3 className="text-base font-semibold text-gray-800 mb-3">Auditor Status</h3>
+              <div className="bg-white rounded-lg shadow-sm border p-4">
+                <div className="flex flex-col gap-5">
+                  <div className="flex items-center">
+                    <div className="w-14 h-14 bg-red-500 flex items-center justify-center text-white text-xl font-bold mr-4">25</div>
+                    <span className="text-base text-gray-800">Audit Not Started</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-14 h-14 bg-yellow-500 flex items-center justify-center text-white text-xl font-bold mr-4">25</div>
+                    <span className="text-base text-gray-800">Audit In Progress</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-14 h-14 bg-green-500 flex items-center justify-center text-white text-xl font-bold mr-4">100</div>
+                    <span className="text-base text-gray-800">Audit Completed</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Checksheet Status - No header, 2x2 grid */}
-            <div className="bg-white rounded-lg shadow-sm border p-4 min-w-0">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">30</div>
-                  <span className="text-xs text-gray-600 truncate">Reviewed</span>
+            {/* Reviewer Status */}
+            <div>
+              <h3 className="text-base font-semibold text-gray-800 mb-3">Reviewer Status</h3>
+              <div className="bg-white rounded-lg shadow-sm border p-4">
+                <div className="flex flex-col gap-5">
+                  <div className="flex items-center">
+                    <div className="w-14 h-14 bg-red-500 flex items-center justify-center text-white text-xl font-bold mr-4">75</div>
+                    <span className="text-base text-gray-800">Review Pending</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-14 h-14 bg-yellow-500 flex items-center justify-center text-white text-xl font-bold mr-4">75</div>
+                    <span className="text-base text-gray-800">Review In Progress</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-14 h-14 bg-green-500 flex items-center justify-center text-white text-xl font-bold mr-4">100</div>
+                    <span className="text-base text-gray-800">Reviewed</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">20</div>
-                  <span className="text-xs text-gray-600 truncate">Completed</span>
-                </div>
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">20</div>
-                  <span className="text-xs text-gray-600 truncate">Pending</span>
-                </div>
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">50</div>
-                  <span className="text-xs text-gray-600 truncate">Alloted</span>
+              </div>
+            </div>
+
+            {/* Auto Submission Status */}
+            <div>
+              <h3 className="text-base font-semibold text-gray-800 mb-3">Auto Submission Status</h3>
+              <div className="bg-white rounded-lg shadow-sm border p-4">
+                <div className="flex flex-col gap-5">
+                  <div className="flex items-center">
+                    <div className="w-14 h-14 bg-red-500 flex items-center justify-center text-white text-xl font-bold mr-4">25</div>
+                    <span className="text-base text-gray-800">Audit Not Started</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-14 h-14 bg-yellow-500 flex items-center justify-center text-white text-xl font-bold mr-4">75</div>
+                    <span className="text-base text-gray-800">Audit Not Reviewed</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-14 h-14 bg-green-500 flex items-center justify-center text-white text-xl font-bold mr-4">100</div>
+                    <span className="text-base text-gray-800">Total Autosubmitted</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right side - Metric cards (smaller size) */}
-          <div className="flex-shrink-0 w-full lg:w-80 xl:w-96">
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 gap-3">
+          {/* Right side - Metric cards with icons on left */}
+          <div className="flex-shrink-0 w-full lg:w-80 xl:w-[500px]">
+            <div className="grid grid-cols-2 gap-3">
               <div className="w-full">
-                <div className="bg-teal-500 text-white rounded-lg p-4 shadow-sm h-24 flex flex-col items-center justify-center">
-                  <Building className="w-6 h-6 mb-1" />
-                  <div className="text-xl font-bold">130</div>
-                  <div className="text-xs opacity-90 text-center">Total Dealers</div>
+                <div className="bg-pink-400 text-white rounded-lg p-4 shadow flex items-center justify-between">
+                  <Building className="w-6 h-6 ml-2 opacity-75" />
+                  <div className="flex flex-col items-end">
+                    <div className="text-3xl font-bold">200</div>
+                    <div className="text-sm mt-1">Total Dealers</div>
+                  </div>
                 </div>
               </div>
               <div className="w-full">
-                <div className="bg-orange-500 text-white rounded-lg p-4 shadow-sm h-24 flex flex-col items-center justify-center">
-                  <Eye className="w-6 h-6 mb-1" />
-                  <div className="text-xl font-bold">56</div>
-                  <div className="text-xs opacity-90 text-center">Audit not started</div>
+                <div className="bg-red-500 text-white rounded-lg p-4 shadow flex items-center justify-between">
+                  <UserCheck className="w-6 h-6 ml-2 opacity-75" />
+                  <div className="flex flex-col items-end">
+                    <div className="text-3xl font-bold">25</div>
+                    <div className="text-sm mt-1">Audit Not started</div>
+                  </div>
                 </div>
               </div>
               <div className="w-full">
-                <div className="bg-blue-500 text-white rounded-lg p-4 shadow-sm h-24 flex flex-col items-center justify-center">
-                  <UserCheck className="w-6 h-6 mb-1" />
-                  <div className="text-xl font-bold">25</div>
-                  <div className="text-xs opacity-90 text-center">Audit Started</div>
+                <div className="bg-yellow-400 text-white rounded-lg p-4 shadow flex items-center justify-between">
+                  <Eye className="w-6 h-6 ml-2 opacity-75" />
+                  <div className="flex flex-col items-end">
+                    <div className="text-3xl font-bold">75</div>
+                    <div className="text-sm mt-1">Audit Not Reviewed</div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full">
+                <div className="bg-blue-500 text-white rounded-lg p-4 shadow flex items-center justify-between">
+                  <FileCheck className="w-6 h-6 ml-2 opacity-75" />
+                  <div className="flex flex-col items-end">
+                    <div className="text-3xl font-bold">100</div>
+                    <div className="text-sm mt-1">Audit Completed</div>
+                  </div>
                 </div>
               </div>
             </div>

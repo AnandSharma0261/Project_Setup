@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { FileCheck, Filter, X, FileText } from 'lucide-react';
+import { FileCheck, Filter, X } from 'lucide-react';
 import { useAppSelector } from '../../hooks/redux';
 import type { AuditData } from '../../types';
+import excelLogo from '../../assets/images/excel-logo.svg';
+import imageLogo from '../../assets/images/image-logo.svg';
 
 const AuditsTable: React.FC = () => {
   const { auditsData } = useAppSelector((state) => state.dashboard);
@@ -110,17 +112,21 @@ const AuditsTable: React.FC = () => {
         </div>
         
         {/* Center - QLQD_Sales Badge - Hidden on mobile */}
-        <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2">
-          <div className="bg-gray-200 px-4 py-2 rounded-md">
+        <div className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 items-center justify-center">
+          <div className="bg-gray-200 px-4 py-2 rounded-md text-center">
             <span className="text-gray-700 font-medium text-sm">QLQD_Sales</span>
           </div>
         </div>
         
         {/* Right side actions */}
         <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
+          {/* Image Export */}
+          <div className="bg-blue-100 p-2 rounded-md cursor-pointer hover:bg-blue-200 transition-colors">
+            <img src={imageLogo} alt="Image Export" className="w-5 h-5" />
+          </div>
           {/* Excel Export */}
           <div className="bg-green-100 p-2 rounded-md cursor-pointer hover:bg-green-200 transition-colors">
-            <FileText className="w-5 h-5 text-green-600" />
+            <img src={excelLogo} alt="Excel Export" className="w-5 h-5" />
           </div>
         </div>
       </div>

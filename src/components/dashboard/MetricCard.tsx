@@ -19,13 +19,15 @@ const MetricCard: React.FC<MetricCardProps> = ({
   className = "" 
 }) => {
   return (
-    <div className={`${bgColor} ${textColor} p-3 sm:p-4 rounded-lg shadow-sm ${className}`} style={{ minHeight: '100px' }}>
-      <div className="flex flex-col items-start justify-center h-full">
-        <div className="opacity-80 mb-1 sm:mb-2">
-          <Icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8" />
+    <div className={`${bgColor} ${textColor} p-3 sm:p-4 rounded-lg shadow-sm ${className}`} style={{ minHeight: '90px' }}>
+      <div className="flex items-center justify-start h-full">
+        <div className="opacity-80 mr-3 sm:mr-4">
+          <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
         </div>
-        <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold mb-1">{value}</p>
-        <p className="text-xs sm:text-sm opacity-90 leading-tight">{title}</p>
+        <div>
+          <p className="text-lg sm:text-xl lg:text-2xl font-bold mb-1">{value}</p>
+          <p className="text-xs sm:text-sm opacity-90 leading-tight">{title}</p>
+        </div>
       </div>
     </div>
   );

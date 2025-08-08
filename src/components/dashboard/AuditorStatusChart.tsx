@@ -4,149 +4,187 @@ import { useAppSelector } from '../../hooks/redux';
 const AuditorStatusChart: React.FC = () => {
   const { auditorStatus } = useAppSelector((state) => state.dashboard);
   
-  // Chart data with percentages for vertical growth - Auditor specific
-  const chartData = [
-    { 
-      label: 'Approved', 
-      value: auditorStatus.approved, 
-      color: '#16DBCC', 
-      percentage: 100, // Green - 60% for auditor
-      baseRadius: 55,
-      maxRadius: 120
+  // Base data for the arcs with actual percentages (these should always total 100%)
+  const baseArcData = [
+    {
+      label: 'Approved',
+      value: auditorStatus.approved,
+      percentage: 30, // This will be 30% of the circle
+      color: '#10B981', // Green/Teal
     },
-    { 
+    {
       label: 'Approval Pending', 
-      value: auditorStatus.approvalPending, 
-      color: '#FF82AC', 
-      percentage: 70, // Pink - 25% for auditor
-      baseRadius: 55,
-      maxRadius: 120
+      value: auditorStatus.approvalPending,
+      percentage: 50, // This will be 50% of the circle  
+      color: '#EF4444', // Red
     },
-    { 
-      label: 'Auto Submitted', 
-      value: auditorStatus.autoSubmitted, 
-      color: '#4C78FF', 
-      percentage: 85, // Blue - 45% for auditor
-      baseRadius: 55,
-      maxRadius: 120
-    },
-    { 
-      label: 'Approval In Progress', 
-      value: auditorStatus.approvalInProgress, 
-      color: '#FFBB38', 
-      percentage:75, // Orange - 30% for auditor
-      baseRadius: 55,
-      maxRadius: 120
-    },
+    {
+      label: 'Auto Submitted',
+      value: auditorStatus.autoSubmitted,
+      percentage: 20, // This will be 20% of the circle
+      color: '#F59E0B', // Orange
+    }
   ];
 
-  // Calculate segments with vertical growth (radius-wise)
-  const pieSegments = chartData.map((item, index) => {
-    // Each segment gets 90 degrees (quarter circle)
-    const startAngle = index * 90; // 0, 90, 180, 270 degrees
-    const endAngle = startAngle + 90;
+  // Ensure percentages total to 100% and calculate proportional angles
+  const totalInputPercentage = baseArcData.reduce((sum, arc) => sum + arc.percentage, 0);
+  
+  // Normalize percentages to ensure they total 100%
+  const normalizedArcData = baseArcData.map(arc => ({
+    ...arc,
+    normalizedPercentage: (arc.percentage / totalInputPercentage) * 100
+  }));
+
+  // Calculate angles based on normalized percentages with fixed gaps
+  const totalAvailableAngle = 320; // Leave 40 degrees total for gaps (not full 360°)
+  const numberOfArcs = normalizedArcData.length;
+  const gapBetweenArcs = 15; // Fixed gap between each arc
+  const totalGapAngle = gapBetweenArcs * numberOfArcs; // Total angle used for gaps
+  const availableForArcs = totalAvailableAngle - totalGapAngle; // Remaining angle for actual arcs
+  
+  let currentAngle = 20; // Start angle with offset from top
+  
+  const arcData = normalizedArcData.map((arc, index) => {
+    // Calculate arc angle based on percentage of available space (not full circle)
+    const arcAngle = (arc.normalizedPercentage / 100) * availableForArcs;
+    const startAngle = currentAngle;
+    const endAngle = currentAngle + arcAngle;
     
-    // Calculate outer radius based on percentage (vertical growth)
-    const radiusRange = item.maxRadius - item.baseRadius;
-    const outerRadius = item.baseRadius + (item.percentage / 100) * radiusRange;
+    currentAngle = endAngle + gapBetweenArcs; // Add gap after each arc
     
     return {
-      ...item,
-      startAngle: startAngle,
-      endAngle: endAngle,
-      innerRadius: item.baseRadius,
-      outerRadius: outerRadius,
-      angle: 90
+      ...arc,
+      startAngle,
+      endAngle,
+      arcAngle,
+      displayPercentage: Math.round(arc.normalizedPercentage) // Round for display
     };
   });
 
-  // Function to create SVG path for pie segment
-  const createPiePath = (
-    centerX: number, 
-    centerY: number, 
-    radius: number, 
-    startAngle: number, 
-    endAngle: number, 
-    innerRadius: number = 0
-  ): string => {
-    const start = polarToCartesian(centerX, centerY, radius, endAngle);
-    const end = polarToCartesian(centerX, centerY, radius, startAngle);
+  // Function to create thick cylindrical tube path with rounded ends
+  const createTubePath = (centerX: number, centerY: number, innerRadius: number, outerRadius: number, startAngle: number, endAngle: number) => {
+    const startAngleRad = (startAngle - 90) * Math.PI / 180;
+    const endAngleRad = (endAngle - 90) * Math.PI / 180;
+    
+    // Outer arc points
+    const x1 = centerX + outerRadius * Math.cos(startAngleRad);
+    const y1 = centerY + outerRadius * Math.sin(startAngleRad);
+    const x2 = centerX + outerRadius * Math.cos(endAngleRad);
+    const y2 = centerY + outerRadius * Math.sin(endAngleRad);
+    
+    // Inner arc points
+    const x3 = centerX + innerRadius * Math.cos(endAngleRad);
+    const y3 = centerY + innerRadius * Math.sin(endAngleRad);
+    const x4 = centerX + innerRadius * Math.cos(startAngleRad);
+    const y4 = centerY + innerRadius * Math.sin(startAngleRad);
+    
     const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
     
-    if (innerRadius > 0) {
-      const innerStart = polarToCartesian(centerX, centerY, innerRadius, endAngle);
-      const innerEnd = polarToCartesian(centerX, centerY, innerRadius, startAngle);
-      
-      return [
-        "M", start.x, start.y, 
-        "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y,
-        "L", innerEnd.x, innerEnd.y,
-        "A", innerRadius, innerRadius, 0, largeArcFlag, 1, innerStart.x, innerStart.y,
-        "Z"
-      ].join(" ");
-    } else {
-      return [
-        "M", centerX, centerY,
-        "L", start.x, start.y,
-        "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y,
-        "Z"
-      ].join(" ");
-    }
-  };
-
-  const polarToCartesian = (
-    centerX: number, 
-    centerY: number, 
-    radius: number, 
-    angleInDegrees: number
-  ): { x: number; y: number } => {
-    const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
-    return {
-      x: centerX + (radius * Math.cos(angleInRadians)),
-      y: centerY + (radius * Math.sin(angleInRadians))
-    };
+    return [
+      "M", x1, y1,
+      "A", outerRadius, outerRadius, 0, largeArcFlag, 1, x2, y2,
+      "L", x3, y3,
+      "A", innerRadius, innerRadius, 0, largeArcFlag, 0, x4, y4,
+      "Z"
+    ].join(" ");
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg flex flex-col justify-between items-center p-3 sm:p-4 lg:p-5 w-full max-w-sm mx-auto" style={{ minHeight: '350px' }}>
+    <div className="bg-white rounded-lg shadow-sm border p-6 flex flex-col items-center min-w-[300px] h-full">
       
-      {/* Pie Chart - Responsive size */}
-      <div className="relative flex-none mx-auto w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64">
-        <svg width="100%" height="100%" viewBox="0 0 320 320" className="absolute inset-0">
-          {pieSegments.map((segment, index) => (
-            <g key={index}>
-              <path
-                d={createPiePath(160, 160, segment.outerRadius, segment.startAngle, segment.endAngle, segment.innerRadius)}
-                fill={segment.color}
-                className="transition-all duration-500 ease-in-out hover:opacity-80"
-              />
-              {/* Add percentage text */}
-              <text
-                x={160 + (segment.outerRadius - 20) * Math.cos((segment.startAngle + 45 - 90) * Math.PI / 180)}
-                y={160 + (segment.outerRadius - 20) * Math.sin((segment.startAngle + 45 - 90) * Math.PI / 180)}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                className="text-sm font-bold fill-white"
-              >
-                {segment.percentage}%
-              </text>
-            </g>
-          ))}
-          {/* Inner white circle */}
-          <circle cx="160" cy="160" r="55" fill="#FFFFFF" />
+      {/* Circular Tube Chart */}
+      <div className="relative w-64 h-64 mb-8">
+        <svg width="256" height="256" viewBox="0 0 256 256">
+          
+          {/* Thick cylindrical tubes with gaps */}
+          {arcData.map((arc, index) => {
+            // Calculate dynamic radius for text positioning based on arc center
+            const midRadius = 78; // Middle of the tube
+            const capRadius = 18; // Radius for end caps
+            
+            return (
+              <g key={index}>
+                {/* Main tube with thick stroke and rounded caps */}
+                <path
+                  d={createTubePath(128, 128, 60, 96, arc.startAngle, arc.endAngle)}
+                  fill={arc.color}
+                  stroke={arc.color}
+                  strokeWidth="2"
+                />
+                
+                {/* Rounded end caps */}
+                <circle
+                  cx={128 + midRadius * Math.cos((arc.startAngle - 90) * Math.PI / 180)}
+                  cy={128 + midRadius * Math.sin((arc.startAngle - 90) * Math.PI / 180)}
+                  r={capRadius}
+                  fill={arc.color}
+                />
+                <circle
+                  cx={128 + midRadius * Math.cos((arc.endAngle - 90) * Math.PI / 180)}
+                  cy={128 + midRadius * Math.sin((arc.endAngle - 90) * Math.PI / 180)}
+                  r={capRadius}
+                  fill={arc.color}
+                />
+                
+                {/* Percentage text on tube - only show if arc is large enough */}
+                {arc.arcAngle > 30 && (
+                  <text
+                    x={128 + midRadius * Math.cos(((arc.startAngle + arc.endAngle) / 2 - 90) * Math.PI / 180)}
+                    y={128 + midRadius * Math.sin(((arc.startAngle + arc.endAngle) / 2 - 90) * Math.PI / 180)}
+                    fill="white"
+                    fontSize="18"
+                    fontWeight="bold"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                  >
+                    {arc.displayPercentage}%
+                  </text>
+                )}
+              </g>
+            );
+          })}
         </svg>
+        
+        {/* Center total value */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-5xl font-bold text-teal-500">100</span>
+        </div>
       </div>
-
-      {/* Legend - Responsive layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 w-full mt-3 sm:mt-4">
-        {chartData.map((item, _idx) => (
-          <div key={item.label} className="flex items-center gap-2">
-            <div className="w-6 h-6 sm:w-7 sm:h-7 rounded flex items-center justify-center text-xs sm:text-sm font-bold text-white" style={{ background: item.color }}>
-              {item.value}
+      
+      {/* Legend - Different arrangement like reviewer status */}
+      <div className="flex flex-col gap-3 items-center">
+        {/* First row - Approval Pending and Auto Submitted */}
+        <div className="flex gap-6">
+          <div className="flex items-center gap-2">
+            <div 
+              className="w-8 h-6 rounded flex items-center justify-center text-white text-sm font-bold"
+              style={{ backgroundColor: '#EF4444' }}
+            >
+              {arcData.find(arc => arc.label === 'Approval Pending')?.displayPercentage || 0}
             </div>
-            <span className="text-xs sm:text-sm text-gray-600 leading-tight">{item.label}</span>
+            <span className="text-sm text-gray-600">Approval Pending</span>
           </div>
-        ))}
+          <div className="flex items-center gap-2">
+            <div 
+              className="w-8 h-6 rounded flex items-center justify-center text-white text-sm font-bold"
+              style={{ backgroundColor: '#F59E0B' }}
+            >
+              {arcData.find(arc => arc.label === 'Auto Submitted')?.displayPercentage || 0}
+            </div>
+            <span className="text-sm text-gray-600">Auto Submitted</span>
+          </div>
+        </div>
+        
+        {/* Second row - Approved (centered) */}
+        <div className="flex items-center gap-2">
+          <div 
+            className="w-10 h-6 rounded flex items-center justify-center text-white text-sm font-bold"
+            style={{ backgroundColor: '#10B981' }}
+          >
+            {arcData.find(arc => arc.label === 'Approved')?.displayPercentage || 0}
+          </div>
+          <span className="text-sm text-gray-600">Approved</span>
+        </div>
       </div>
     </div>
   );

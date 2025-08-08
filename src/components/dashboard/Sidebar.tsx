@@ -19,8 +19,8 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <div className="w-64 bg-white shadow-sm border-r border-gray-200 flex-shrink-0 transition-all duration-300 ease-in-out">
-      <nav className="mt-6">
+    <div className="w-full h-full">
+      <nav className="mt-6 px-3">
         {navItems.map((item) => {
           const IconComponent = item.icon;
           return (
@@ -28,10 +28,10 @@ const Sidebar: React.FC = () => {
               key={item.id}
               to={item.path}
               className={({ isActive }) =>
-                `flex items-center justify-between px-6 py-3 text-sm font-medium transition-colors duration-150 hover:bg-blue-50 hover:text-blue-600 ${
+                `flex items-center justify-between px-4 py-3 mb-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out group ${
                   isActive
-                    ? 'bg-blue-600 text-white border-r-2 border-blue-600'
-                    : 'text-gray-700'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'text-gray-700 hover:bg-white hover:shadow-sm hover:text-blue-600'
                 }`
               }
             >
@@ -39,7 +39,7 @@ const Sidebar: React.FC = () => {
                 <IconComponent className="w-5 h-5 mr-3" />
                 {item.label}
               </div>
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className={`w-4 h-4 transition-transform duration-200 group-hover:translate-x-1`} />
             </NavLink>
           );
         })}

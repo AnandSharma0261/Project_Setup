@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Component styles */
+@import './components/scrollbar.css';
+
 /* Global styles */
 * {
   box-sizing: border-box;
@@ -15,4 +18,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent horizontal scroll and layout shifts */
+  overflow-x: hidden;
 }

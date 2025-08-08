@@ -3,7 +3,7 @@ import { Users, Eye, UserCheck } from 'lucide-react';
 import { setFilters } from '../store/slices/dashboardSlice';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import MetricCard from '../components/dashboard/MetricCard.tsx';
-import ReviewerStatusChart from '../components/dashboard/ReviewerStatusVerticalChart.tsx';
+import ReviewerStatusCard from '../components/dashboard/ReviewerStatusCard.tsx';
 import AuditorStatusChart from '../components/dashboard/AuditorStatusChart.tsx';
 import Layout from '../components/dashboard/Layout.tsx';
 import ChecksheetStatus from '../components/dashboard/ChecksheetStatus.tsx';
@@ -142,47 +142,62 @@ const Dashboard: React.FC = () => {
           {/* Main status cards - responsive columns */}
           <div className="lg:col-span-12 xl:col-span-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center h-full">
                 <span className="text-sm lg:text-lg font-semibold text-gray-800 mb-2 lg:mb-3">Auditor Status</span>
-                <AuditorStatusChart />
+                <div className="flex-1 w-full flex items-center justify-center">
+                  <AuditorStatusChart />
+                </div>
               </div>
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center h-full">
                 <span className="text-sm lg:text-lg font-semibold text-gray-800 mb-2 lg:mb-3">Reviewer Status</span>
-                <ReviewerStatusChart />
+                <div className="flex-1 w-full flex items-center justify-center">
+                  <ReviewerStatusCard />
+                </div>
               </div>
-              <div className="flex flex-col items-center sm:col-span-2 lg:col-span-1">
+              <div className="flex flex-col items-center h-full">
                 <span className="text-sm lg:text-lg font-semibold text-gray-800 mb-2 lg:mb-3">Checksheet Status</span>
-                <ChecksheetStatus />
+                <div className="flex-1 w-full flex items-center justify-center">
+                  <ChecksheetStatus />
+                </div>
               </div>
             </div>
           </div>
           {/* Metric cards - responsive positioning */}
           <div className="lg:col-span-12 xl:col-span-2">
-            <div className="grid grid-cols-3 lg:grid-cols-3 xl:grid-cols-1 gap-3 lg:gap-4 xl:justify-end xl:items-end h-full">
+            <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-1 gap-3 lg:gap-4 h-full">
               <div className="w-full max-w-[160px] xl:max-w-none">
                 <MetricCard
-                  title="Total Users"
-                  value={metrics.totalUsers}
+                  title="Total Dealers"
+                  value={200}
                   icon={Users}
-                  bgColor="bg-teal-500"
+                  bgColor="bg-pink-400"
                   textColor="text-white"
                 />
               </div>
               <div className="w-full max-w-[160px] xl:max-w-none">
                 <MetricCard
-                  title="Total Reviewers"
-                  value={metrics.totalReviewers}
+                  title="Audit Not started"
+                  value={25}
                   icon={Eye}
-                  bgColor="bg-purple-500"
+                  bgColor="bg-red-500"
                   textColor="text-white"
                 />
               </div>
               <div className="w-full max-w-[160px] xl:max-w-none">
                 <MetricCard
-                  title="Total Auditor"
-                  value={metrics.totalAuditors}
+                  title="Audit Not Reviewed"
+                  value={75}
                   icon={UserCheck}
-                  bgColor="bg-orange-500"
+                  bgColor="bg-amber-400"
+                  textColor="text-white"
+                />
+              </div>
+              <div className="w-full max-w-[160px] xl:max-w-none">
+                <MetricCard
+                  title="Audit Completed"
+                  value={100}
+                  icon={Users}
+                  bgColor="bg-blue-500"
                   textColor="text-white"
                 />
               </div>

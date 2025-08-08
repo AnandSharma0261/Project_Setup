@@ -10,40 +10,154 @@ const ReviewerStatusCard: React.FC<ReviewerStatusCardProps> = ({ cardType = 'rev
   
   const statusData = cardType === 'auditor' ? auditorStatus : reviewerStatus;
   
-  const LEGEND = [
-    { label: 'Auto Submitted', value: statusData.autoSubmitted, color: '#4C78FF' },
-    { label: 'Approval In Progress', value: statusData.approvalInProgress, color: '#FFBB38' },
-    { label: 'Approved', value: statusData.approved, color: '#16DBCC' },
-    { label: 'Approval Pending', value: statusData.approvalPending, color: '#FF82AC' },
+  // Calculate total for center display
+  const total = statusData.autoSubmitted + statusData.approvalInProgress + statusData.approved + statusData.approvalPending;
+  
+  // Smaller rings with even spacing - 360° divided by 3 = 120° per section
+  const arcData = [
+    {
+      label: 'Reviewed',
+      value: 100,
+      percentage: 20,
+      color: '#10B981', // Green/Teal
+      startAngle: 15,   // Start with offset
+      endAngle: 95      // 80° arc (smaller size)
+    },
+    {
+      label: 'Review Pending', 
+      value: 75,
+      percentage: 60,
+      color: '#EF4444', // Red
+      startAngle: 135,  // 120° section + 15° offset
+      endAngle: 215     // 80° arc (smaller size)
+    },
+    {
+      label: 'Review In Progress',
+      value: 75,
+      percentage: 20,
+      color: '#F59E0B', // Orange
+      startAngle: 255,  // 240° section + 15° offset
+      endAngle: 305     // 50° arc (smallest for 20%)
+    }
   ];
 
+  // Function to create thick cylindrical tube path with rounded ends
+  const createTubePath = (centerX: number, centerY: number, innerRadius: number, outerRadius: number, startAngle: number, endAngle: number) => {
+    const startAngleRad = (startAngle - 90) * Math.PI / 180;
+    const endAngleRad = (endAngle - 90) * Math.PI / 180;
+    
+    // Outer arc points
+    const x1 = centerX + outerRadius * Math.cos(startAngleRad);
+    const y1 = centerY + outerRadius * Math.sin(startAngleRad);
+    const x2 = centerX + outerRadius * Math.cos(endAngleRad);
+    const y2 = centerY + outerRadius * Math.sin(endAngleRad);
+    
+    // Inner arc points
+    const x3 = centerX + innerRadius * Math.cos(endAngleRad);
+    const y3 = centerY + innerRadius * Math.sin(endAngleRad);
+    const x4 = centerX + innerRadius * Math.cos(startAngleRad);
+    const y4 = centerY + innerRadius * Math.sin(startAngleRad);
+    
+    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+    
+    return [
+      "M", x1, y1,
+      "A", outerRadius, outerRadius, 0, largeArcFlag, 1, x2, y2,
+      "L", x3, y3,
+      "A", innerRadius, innerRadius, 0, largeArcFlag, 0, x4, y4,
+      "Z"
+    ].join(" ");
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-lg flex flex-col justify-between items-center p-5 w-full max-w-sm mx-auto" style={{ minHeight: '400px' }}>
-      {/* Donut Chart */}
-      <div className="relative flex-none mx-auto w-56 h-56">
-        <svg width="100%" height="100%" viewBox="0 0 274 271" className="absolute inset-0">
-          {/* Auto Submitted - Blue */}
-          <path d="M 137 40 A 90 90 0 0 1 227 135 L 184 135 A 47 47 0 0 0 137 88 Z" fill="#4C78FF" />
-          {/* Approval In Progress - Yellow */}
-          <path d="M 227 135 A 90 90 0 0 1 137 225 L 137 182 A 47 47 0 0 0 184 135 Z" fill="#FFBB38" />
-          {/* Approved - Teal */}
-          <path d="M 137 225 A 90 90 0 0 1 47 135 L 90 135 A 47 47 0 0 0 137 182 Z" fill="#16DBCC" />
-          {/* Approval Pending - Pink */}
-          <path d="M 47 135 A 90 90 0 0 1 137 40 L 137 88 A 47 47 0 0 0 90 135 Z" fill="#FF82AC" />
-          {/* Inner white circle */}
-          <circle cx="137" cy="135" r="47" fill="#FFFFFF" />
+    <div className="bg-white rounded-lg shadow-lg flex flex-col items-center p-3 sm:p-4 lg:p-5 w-full max-w-sm mx-auto" style={{ minHeight: '400px' }}>
+      <h3 className="text-gray-800 font-medium text-lg self-start mb-4">{cardType === 'auditor' ? 'Auditor Status' : 'Reviewer Status'}</h3>
+      
+      {/* Circular Tube Chart */}
+      <div className="relative w-64 h-64 mb-8">
+        <svg width="256" height="256" viewBox="0 0 256 256">
+          
+          {/* Thick cylindrical tubes with gaps */}
+          {arcData.map((arc, index) => (
+            <g key={index}>
+              {/* Main tube with thick stroke and rounded caps */}
+              <path
+                d={createTubePath(128, 128, 60, 96, arc.startAngle, arc.endAngle)}
+                fill={arc.color}
+                stroke={arc.color}
+                strokeWidth="2"
+              />
+              
+              {/* Rounded end caps */}
+              <circle
+                cx={128 + 78 * Math.cos((arc.startAngle - 90) * Math.PI / 180)}
+                cy={128 + 78 * Math.sin((arc.startAngle - 90) * Math.PI / 180)}
+                r="18"
+                fill={arc.color}
+              />
+              <circle
+                cx={128 + 78 * Math.cos((arc.endAngle - 90) * Math.PI / 180)}
+                cy={128 + 78 * Math.sin((arc.endAngle - 90) * Math.PI / 180)}
+                r="18"
+                fill={arc.color}
+              />
+              
+              {/* Percentage text on tube */}
+              <text
+                x={128 + 78 * Math.cos(((arc.startAngle + arc.endAngle) / 2 - 90) * Math.PI / 180)}
+                y={128 + 78 * Math.sin(((arc.startAngle + arc.endAngle) / 2 - 90) * Math.PI / 180)}
+                fill="white"
+                fontSize="18"
+                fontWeight="bold"
+                textAnchor="middle"
+                dominantBaseline="middle"
+              >
+                {arc.percentage}%
+              </text>
+            </g>
+          ))}
         </svg>
+        
+        {/* Center total value */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-5xl font-bold text-teal-500">100</span>
+        </div>
       </div>
-      {/* Legend */}
-      <div className="grid grid-cols-2 gap-3 w-full mt-4">
-        {LEGEND.map((item, idx) => (
-          <div key={item.label} className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded flex items-center justify-center text-sm font-bold text-white" style={{ background: item.color }}>
-              {item.value}
+      
+      {/* Legend - Different arrangement like second image */}
+      <div className="flex flex-col gap-3 items-center">
+        {/* First row - Review Pending and Review In Progress */}
+        <div className="flex gap-6">
+          <div className="flex items-center gap-2">
+            <div 
+              className="w-8 h-6 rounded flex items-center justify-center text-white text-sm font-bold"
+              style={{ backgroundColor: '#EF4444' }}
+            >
+              75
             </div>
-            <span className="text-sm text-gray-600 leading-tight">{item.label}</span>
+            <span className="text-sm text-gray-600">Review Pending</span>
           </div>
-        ))}
+          <div className="flex items-center gap-2">
+            <div 
+              className="w-8 h-6 rounded flex items-center justify-center text-white text-sm font-bold"
+              style={{ backgroundColor: '#F59E0B' }}
+            >
+              75
+            </div>
+            <span className="text-sm text-gray-600">Review In Progress</span>
+          </div>
+        </div>
+        
+        {/* Second row - Reviewed (centered) */}
+        <div className="flex items-center gap-2">
+          <div 
+            className="w-10 h-6 rounded flex items-center justify-center text-white text-sm font-bold"
+            style={{ backgroundColor: '#10B981' }}
+          >
+            100
+          </div>
+          <span className="text-sm text-gray-600">Reviewed</span>
+        </div>
       </div>
     </div>
   );
