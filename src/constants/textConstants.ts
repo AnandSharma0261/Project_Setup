@@ -214,7 +214,7 @@ export const TEXT_CONSTANTS = {
     DATE: 'audit.date',
     SCORE: 'audit.score',
     CHECKSHEET: 'audit.checksheet',
-    CHECKSHEET_STATUS: 'audit.checksheetStatus',
+    AUTO_SUBMISSION_STATUS: 'audit.autoSubmissionStatus',
   },
 
   // User Management

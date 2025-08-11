@@ -1,10 +1,9 @@
 import React from 'react';
-import type { LucideIcon } from 'lucide-react';
 
 interface MetricCardProps {
   title: string;
   value: number;
-  icon: LucideIcon;
+  iconSrc: string;
   bgColor: string;
   textColor: string;
   className?: string;
@@ -13,7 +12,7 @@ interface MetricCardProps {
 const MetricCard: React.FC<MetricCardProps> = ({ 
   title, 
   value, 
-  icon: Icon, 
+  iconSrc, 
   bgColor, 
   textColor, 
   className = "" 
@@ -22,7 +21,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
     <div className={`${bgColor} ${textColor} p-3 sm:p-4 rounded-lg shadow-sm ${className}`} style={{ minHeight: '90px' }}>
       <div className="flex items-center justify-start h-full">
         <div className="opacity-80 mr-3 sm:mr-4">
-          <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
+          <img src={iconSrc} alt="" className="w-6 h-6 sm:w-7 sm:h-7" />
         </div>
         <div>
           <p className="text-lg sm:text-xl lg:text-2xl font-bold mb-1">{value}</p>

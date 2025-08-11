@@ -181,7 +181,7 @@
     "date": "Date",
     "score": "Score",
     "checksheet": "Checksheet",
-    "checksheetStatus": "Checksheet Status"
+    "autoSubmissionStatus": "Auto Submission Status"
   },
   "users": {
     "totalUsers": "Total Users",

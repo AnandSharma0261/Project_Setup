@@ -37,7 +37,7 @@ const initialState: DashboardState = {
     approved: 30,
     approvalPending: 20,
   },
-  checksheetStatus: {
+  autoSubmissionStatus: {
     reviewed: 30,
     completed: 20,
     pending: 20,

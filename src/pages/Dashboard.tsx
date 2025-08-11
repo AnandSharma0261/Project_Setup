@@ -1,13 +1,16 @@
 import React from 'react';
-import { Users, Eye, UserCheck } from 'lucide-react';
 import { setFilters } from '../store/slices/dashboardSlice';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import MetricCard from '../components/dashboard/MetricCard.tsx';
 import ReviewerStatusCard from '../components/dashboard/ReviewerStatusCard.tsx';
 import AuditorStatusChart from '../components/dashboard/AuditorStatusChart.tsx';
 import Layout from '../components/dashboard/Layout.tsx';
-import ChecksheetStatus from '../components/dashboard/ChecksheetStatus.tsx';
+import AutoSubmissionStatus from '../components/dashboard/AutoSubmissionStatus.tsx';
 import AuditsTable from '../components/dashboard/AuditsTable.tsx';
+import metric1Icon from '../assets/icons/metric1.svg';
+import metric2Icon from '../assets/icons/metric2.svg';
+import metric3Icon from '../assets/icons/metric3.svg';
+import metric4Icon from '../assets/icons/metric4.svg';
 
 const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -155,9 +158,9 @@ const Dashboard: React.FC = () => {
                 </div>
               </div>
               <div className="flex flex-col items-center h-full">
-                <span className="text-sm lg:text-lg font-semibold text-gray-800 mb-2 lg:mb-3">Checksheet Status</span>
+                <span className="text-sm lg:text-lg font-semibold text-gray-800 mb-2 lg:mb-3">Auto Submission Status</span>
                 <div className="flex-1 w-full flex items-center justify-center">
-                  <ChecksheetStatus />
+                  <AutoSubmissionStatus />
                 </div>
               </div>
             </div>
@@ -169,7 +172,7 @@ const Dashboard: React.FC = () => {
                 <MetricCard
                   title="Total Dealers"
                   value={200}
-                  icon={Users}
+                  iconSrc={metric1Icon}
                   bgColor="bg-pink-400"
                   textColor="text-white"
                 />
@@ -178,7 +181,7 @@ const Dashboard: React.FC = () => {
                 <MetricCard
                   title="Audit Not started"
                   value={25}
-                  icon={Eye}
+                  iconSrc={metric2Icon}
                   bgColor="bg-red-500"
                   textColor="text-white"
                 />
@@ -187,7 +190,7 @@ const Dashboard: React.FC = () => {
                 <MetricCard
                   title="Audit Not Reviewed"
                   value={75}
-                  icon={UserCheck}
+                  iconSrc={metric3Icon}
                   bgColor="bg-amber-400"
                   textColor="text-white"
                 />
@@ -196,7 +199,7 @@ const Dashboard: React.FC = () => {
                 <MetricCard
                   title="Audit Completed"
                   value={100}
-                  icon={Users}
+                  iconSrc={metric4Icon}
                   bgColor="bg-blue-500"
                   textColor="text-white"
                 />

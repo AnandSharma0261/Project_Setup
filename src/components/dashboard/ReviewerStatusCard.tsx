@@ -10,36 +10,61 @@ const ReviewerStatusCard: React.FC<ReviewerStatusCardProps> = ({ cardType = 'rev
   
   const statusData = cardType === 'auditor' ? auditorStatus : reviewerStatus;
   
-  // Calculate total for center display
-  const total = statusData.autoSubmitted + statusData.approvalInProgress + statusData.approved + statusData.approvalPending;
-  
-  // Smaller rings with even spacing - 360° divided by 3 = 120° per section
-  const arcData = [
+  // Base data for the arcs with actual percentages (these should always total 100%)
+  const baseArcData = [
+    {
+      label: 'Review Pending',
+      value: statusData.approvalPending,
+      percentage: 50, // This will be 50% of the circle
+      color: '#EF4444', // Red
+    },
+    {
+      label: 'Review In Progress', 
+      value: statusData.approvalInProgress,
+      percentage: 20, // This will be 30% of the circle  
+      color: '#F59E0B', // Orange
+    },
     {
       label: 'Reviewed',
-      value: 100,
-      percentage: 20,
+      value: statusData.approved,
+      percentage: 30, // This will be 20% of the circle
       color: '#10B981', // Green/Teal
-      startAngle: 15,   // Start with offset
-      endAngle: 95      // 80° arc (smaller size)
-    },
-    {
-      label: 'Review Pending', 
-      value: 75,
-      percentage: 60,
-      color: '#EF4444', // Red
-      startAngle: 135,  // 120° section + 15° offset
-      endAngle: 215     // 80° arc (smaller size)
-    },
-    {
-      label: 'Review In Progress',
-      value: 75,
-      percentage: 20,
-      color: '#F59E0B', // Orange
-      startAngle: 255,  // 240° section + 15° offset
-      endAngle: 305     // 50° arc (smallest for 20%)
     }
   ];
+
+  // Ensure percentages total to 100% and calculate proportional angles
+  const totalInputPercentage = baseArcData.reduce((sum, arc) => sum + arc.percentage, 0);
+  
+  // Normalize percentages to ensure they total 100% (in case they don't add up exactly)
+  const normalizedArcData = baseArcData.map(arc => ({
+    ...arc,
+    normalizedPercentage: (arc.percentage / totalInputPercentage) * 100
+  }));
+
+  // Calculate angles based on actual percentages - each percentage = 3.6 degrees (360/100)
+  const gapBetweenArcs = 29; // Much larger gap between arcs to prevent overlap (in degrees)
+  const totalGapAngle = gapBetweenArcs * normalizedArcData.length;
+  const availableForArcs = 360 - totalGapAngle; // Remaining degrees for actual arcs
+  
+  let currentAngle = 15; // Start with offset from top (15 degrees offset for better positioning)
+  
+  const arcData = normalizedArcData.map((arc, index) => {
+    // Calculate arc angle: each 1% = availableForArcs/100 degrees
+    const arcAngle = (arc.normalizedPercentage / 100) * availableForArcs;
+    const startAngle = currentAngle;
+    const endAngle = currentAngle + arcAngle;
+    
+    // Move to next position with larger gap to prevent overlap
+    currentAngle = endAngle + gapBetweenArcs;
+    
+    return {
+      ...arc,
+      startAngle,
+      endAngle,
+      arcAngle,
+      displayPercentage: Math.round(arc.normalizedPercentage) // Round for display
+    };
+  });
 
   // Function to create thick cylindrical tube path with rounded ends
   const createTubePath = (centerX: number, centerY: number, innerRadius: number, outerRadius: number, startAngle: number, endAngle: number) => {
@@ -70,52 +95,59 @@ const ReviewerStatusCard: React.FC<ReviewerStatusCardProps> = ({ cardType = 'rev
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg flex flex-col items-center p-3 sm:p-4 lg:p-5 w-full max-w-sm mx-auto" style={{ minHeight: '400px' }}>
-      <h3 className="text-gray-800 font-medium text-lg self-start mb-4">{cardType === 'auditor' ? 'Auditor Status' : 'Reviewer Status'}</h3>
+    <div className="bg-white rounded-lg shadow-lg flex flex-col justify-between items-center p-3 sm:p-4 lg:p-5 w-full max-w-lg mx-auto" style={{ minHeight: '440px' }}>
       
       {/* Circular Tube Chart */}
-      <div className="relative w-64 h-64 mb-8">
+      <div className="relative w-64 h-64 flex-none">
         <svg width="256" height="256" viewBox="0 0 256 256">
           
           {/* Thick cylindrical tubes with gaps */}
-          {arcData.map((arc, index) => (
-            <g key={index}>
-              {/* Main tube with thick stroke and rounded caps */}
-              <path
-                d={createTubePath(128, 128, 60, 96, arc.startAngle, arc.endAngle)}
-                fill={arc.color}
-                stroke={arc.color}
-                strokeWidth="2"
-              />
-              
-              {/* Rounded end caps */}
-              <circle
-                cx={128 + 78 * Math.cos((arc.startAngle - 90) * Math.PI / 180)}
-                cy={128 + 78 * Math.sin((arc.startAngle - 90) * Math.PI / 180)}
-                r="18"
-                fill={arc.color}
-              />
-              <circle
-                cx={128 + 78 * Math.cos((arc.endAngle - 90) * Math.PI / 180)}
-                cy={128 + 78 * Math.sin((arc.endAngle - 90) * Math.PI / 180)}
-                r="18"
-                fill={arc.color}
-              />
-              
-              {/* Percentage text on tube */}
-              <text
-                x={128 + 78 * Math.cos(((arc.startAngle + arc.endAngle) / 2 - 90) * Math.PI / 180)}
-                y={128 + 78 * Math.sin(((arc.startAngle + arc.endAngle) / 2 - 90) * Math.PI / 180)}
-                fill="white"
-                fontSize="18"
-                fontWeight="bold"
-                textAnchor="middle"
-                dominantBaseline="middle"
-              >
-                {arc.percentage}%
-              </text>
-            </g>
-          ))}
+          {arcData.map((arc, index) => {
+            // Calculate dynamic radius for text positioning based on arc center
+            const midRadius = 78; // Middle of the tube
+            const capRadius = 12; // Smaller radius for end caps to prevent overlap
+            
+            return (
+              <g key={index}>
+                {/* Main tube with thick stroke and rounded caps */}
+                <path
+                  d={createTubePath(128, 128, 60, 96, arc.startAngle, arc.endAngle)}
+                  fill={arc.color}
+                  stroke={arc.color}
+                  strokeWidth="2"
+                />
+                
+                {/* Perfectly circular rounded end caps covering full tube thickness */}
+                <circle
+                  cx={128 + midRadius * Math.cos((arc.startAngle - 90) * Math.PI / 180)}
+                  cy={128 + midRadius * Math.sin((arc.startAngle - 90) * Math.PI / 180)}
+                  r={18}
+                  fill={arc.color}
+                />
+                <circle
+                  cx={128 + midRadius * Math.cos((arc.endAngle - 90) * Math.PI / 180)}
+                  cy={128 + midRadius * Math.sin((arc.endAngle - 90) * Math.PI / 180)}
+                  r={18}
+                  fill={arc.color}
+                />
+                
+                {/* Percentage text on tube - only show if arc is large enough */}
+                {arc.arcAngle > 30 && (
+                  <text
+                    x={128 + midRadius * Math.cos(((arc.startAngle + arc.endAngle) / 2 - 90) * Math.PI / 180)}
+                    y={128 + midRadius * Math.sin(((arc.startAngle + arc.endAngle) / 2 - 90) * Math.PI / 180)}
+                    fill="white"
+                    fontSize="18"
+                    fontWeight="bold"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                  >
+                    {arc.displayPercentage}%
+                  </text>
+                )}
+              </g>
+            );
+          })}
         </svg>
         
         {/* Center total value */}
@@ -124,8 +156,8 @@ const ReviewerStatusCard: React.FC<ReviewerStatusCardProps> = ({ cardType = 'rev
         </div>
       </div>
       
-      {/* Legend - Different arrangement like second image */}
-      <div className="flex flex-col gap-3 items-center">
+      {/* Legend - Bottom positioned like ChecksheetStatus */}
+      <div className="flex flex-col gap-3 items-center w-full mt-4">
         {/* First row - Review Pending and Review In Progress */}
         <div className="flex gap-6">
           <div className="flex items-center gap-2">

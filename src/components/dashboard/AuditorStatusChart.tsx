@@ -7,50 +7,49 @@ const AuditorStatusChart: React.FC = () => {
   // Base data for the arcs with actual percentages (these should always total 100%)
   const baseArcData = [
     {
-      label: 'Approved',
-      value: auditorStatus.approved,
-      percentage: 30, // This will be 30% of the circle
-      color: '#10B981', // Green/Teal
-    },
-    {
-      label: 'Approval Pending', 
+      label: 'Audit Not Started',
       value: auditorStatus.approvalPending,
-      percentage: 50, // This will be 50% of the circle  
+      percentage: 50, // This will be 50% of the circle
       color: '#EF4444', // Red
     },
     {
-      label: 'Auto Submitted',
+      label: 'Audit In Progress', 
       value: auditorStatus.autoSubmitted,
-      percentage: 20, // This will be 20% of the circle
+      percentage: 30, // This will be 30% of the circle  
       color: '#F59E0B', // Orange
+    },
+    {
+      label: 'Audit Completed',
+      value: auditorStatus.approved,
+      percentage: 20, // This will be 20% of the circle
+      color: '#10B981', // Green/Teal
     }
   ];
 
   // Ensure percentages total to 100% and calculate proportional angles
   const totalInputPercentage = baseArcData.reduce((sum, arc) => sum + arc.percentage, 0);
   
-  // Normalize percentages to ensure they total 100%
+  // Normalize percentages to ensure they total 100% (in case they don't add up exactly)
   const normalizedArcData = baseArcData.map(arc => ({
     ...arc,
     normalizedPercentage: (arc.percentage / totalInputPercentage) * 100
   }));
 
-  // Calculate angles based on normalized percentages with fixed gaps
-  const totalAvailableAngle = 320; // Leave 40 degrees total for gaps (not full 360°)
-  const numberOfArcs = normalizedArcData.length;
-  const gapBetweenArcs = 15; // Fixed gap between each arc
-  const totalGapAngle = gapBetweenArcs * numberOfArcs; // Total angle used for gaps
-  const availableForArcs = totalAvailableAngle - totalGapAngle; // Remaining angle for actual arcs
+  // Calculate angles based on actual percentages - each percentage = 3.6 degrees (360/100)
+  const gapBetweenArcs = 29; // Reduced gap between arcs for closer spacing (in degrees)
+  const totalGapAngle = gapBetweenArcs * normalizedArcData.length;
+  const availableForArcs = 360 - totalGapAngle; // Remaining degrees for actual arcs
   
-  let currentAngle = 20; // Start angle with offset from top
+  let currentAngle = 15; // Start with offset from top (15 degrees offset for better positioning)
   
   const arcData = normalizedArcData.map((arc, index) => {
-    // Calculate arc angle based on percentage of available space (not full circle)
+    // Calculate arc angle: each 1% = availableForArcs/100 degrees
     const arcAngle = (arc.normalizedPercentage / 100) * availableForArcs;
     const startAngle = currentAngle;
     const endAngle = currentAngle + arcAngle;
     
-    currentAngle = endAngle + gapBetweenArcs; // Add gap after each arc
+    // Move to next position with larger gap to prevent overlap
+    currentAngle = endAngle + gapBetweenArcs;
     
     return {
       ...arc,
@@ -90,17 +89,17 @@ const AuditorStatusChart: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border p-6 flex flex-col items-center min-w-[300px] h-full">
+    <div className="bg-white rounded-lg shadow-lg flex flex-col justify-between items-center p-3 sm:p-4 lg:p-5 w-full max-w-lg mx-auto" style={{ minHeight: '440px' }}>
       
       {/* Circular Tube Chart */}
-      <div className="relative w-64 h-64 mb-8">
+      <div className="relative w-64 h-64 flex-none">
         <svg width="256" height="256" viewBox="0 0 256 256">
           
           {/* Thick cylindrical tubes with gaps */}
           {arcData.map((arc, index) => {
             // Calculate dynamic radius for text positioning based on arc center
             const midRadius = 78; // Middle of the tube
-            const capRadius = 18; // Radius for end caps
+            const capRadius = 12; // Smaller radius for end caps to prevent overlap
             
             return (
               <g key={index}>
@@ -112,17 +111,17 @@ const AuditorStatusChart: React.FC = () => {
                   strokeWidth="2"
                 />
                 
-                {/* Rounded end caps */}
+                {/* Perfectly circular rounded end caps covering full tube thickness */}
                 <circle
                   cx={128 + midRadius * Math.cos((arc.startAngle - 90) * Math.PI / 180)}
                   cy={128 + midRadius * Math.sin((arc.startAngle - 90) * Math.PI / 180)}
-                  r={capRadius}
+                  r={18}
                   fill={arc.color}
                 />
                 <circle
                   cx={128 + midRadius * Math.cos((arc.endAngle - 90) * Math.PI / 180)}
                   cy={128 + midRadius * Math.sin((arc.endAngle - 90) * Math.PI / 180)}
-                  r={capRadius}
+                  r={18}
                   fill={arc.color}
                 />
                 
@@ -151,39 +150,39 @@ const AuditorStatusChart: React.FC = () => {
         </div>
       </div>
       
-      {/* Legend - Different arrangement like reviewer status */}
-      <div className="flex flex-col gap-3 items-center">
-        {/* First row - Approval Pending and Auto Submitted */}
+      {/* Legend - Bottom positioned like ChecksheetStatus */}
+      <div className="flex flex-col gap-3 items-center w-full mt-4">
+        {/* First row - Audit Not Started and Audit In Progress */}
         <div className="flex gap-6">
           <div className="flex items-center gap-2">
             <div 
               className="w-8 h-6 rounded flex items-center justify-center text-white text-sm font-bold"
               style={{ backgroundColor: '#EF4444' }}
             >
-              {arcData.find(arc => arc.label === 'Approval Pending')?.displayPercentage || 0}
+              75
             </div>
-            <span className="text-sm text-gray-600">Approval Pending</span>
+            <span className="text-sm text-gray-600">Audit Not Started</span>
           </div>
           <div className="flex items-center gap-2">
             <div 
               className="w-8 h-6 rounded flex items-center justify-center text-white text-sm font-bold"
               style={{ backgroundColor: '#F59E0B' }}
             >
-              {arcData.find(arc => arc.label === 'Auto Submitted')?.displayPercentage || 0}
+              75
             </div>
-            <span className="text-sm text-gray-600">Auto Submitted</span>
+            <span className="text-sm text-gray-600">Audit In Progress</span>
           </div>
         </div>
         
-        {/* Second row - Approved (centered) */}
+        {/* Second row - Audit Completed (centered) */}
         <div className="flex items-center gap-2">
           <div 
             className="w-10 h-6 rounded flex items-center justify-center text-white text-sm font-bold"
             style={{ backgroundColor: '#10B981' }}
           >
-            {arcData.find(arc => arc.label === 'Approved')?.displayPercentage || 0}
+            100
           </div>
-          <span className="text-sm text-gray-600">Approved</span>
+          <span className="text-sm text-gray-600">Audit Completed</span>
         </div>
       </div>
     </div>

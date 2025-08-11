@@ -181,7 +181,7 @@
     "date": "दिनांक",
     "score": "स्कोर",
     "checksheet": "चेकशीट",
-    "checksheetStatus": "चेकशीट स्थिति"
+    "autoSubmissionStatus": "ऑटो सबमिशन स्थिति"
   },
   "users": {
     "totalUsers": "कुल उपयोगकर्ता",

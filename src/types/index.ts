@@ -87,7 +87,7 @@ export interface ReviewerStatus {
   approvalPending: number
 }
 
-export interface ChecksheetStatus {
+export interface AutoSubmissionStatus {
   reviewed: number
   completed: number
   pending: number
@@ -120,7 +120,7 @@ export interface DashboardState {
   sidebarOpen: boolean
   auditorStatus: AuditorStatus
   reviewerStatus: ReviewerStatus
-  checksheetStatus: ChecksheetStatus
+  autoSubmissionStatus: AutoSubmissionStatus
   auditsData: AuditData[]
 }
 
